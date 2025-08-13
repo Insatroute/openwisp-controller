@@ -9,11 +9,11 @@ shortuuid~=1.0.13
 netaddr~=1.3.0
 django-import-export~=4.1.1
 
-netjsonconfig @ https://github.com/Insatroute/netjsonconfig/tarball/main
-django-x509 @ https://github.com/Insatroute/django-x509/tarball/main
-django-loci @ https://github.com/Insatroute/django-loci/tarball/main
-openwisp-users @ https://github.com/Insatroute/openwisp-users/tarball/main
-openwisp-utils[celery,channels] @ https://github.com/Insatroute/openwisp-utils/tarball/main
-openwisp-monitoring @ https://github.com/Insatroute/openwisp-monitoring/tarball/main
-openwisp-ipam @ https://github.com/Insatroute/openwisp-ipam/tarball/main
-djangorestframework-gis @ https://github.com/Insatroute/django-rest-framework-gis/tarball/main
+-e git+https://github.com/Insatroute/openwisp-utils.git@main#egg=openwisp_utils[celery,channels]
+-e git+https://github.com/Insatroute/netjsonconfig.git@main#egg=netjsonconfig
+-e git+https://github.com/Insatroute/django-x509.git@main#egg=django_x509
+-e git+https://github.com/Insatroute/django-loci.git@main#egg=django_loci
+-e git+https://github.com/Insatroute/openwisp-users.git@main#egg=openwisp_users
+-e git+https://github.com/Insatroute/openwisp-ipam.git@main#egg=openwisp_ipam
+-e git+https://github.com/Insatroute/django-rest-framework-gis.git@main#egg=djangorestframework_gis
+-e git+https://github.com/Insatroute/openwisp-monitoring.git@main#egg=openwisp_monitoring
