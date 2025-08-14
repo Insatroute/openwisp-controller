@@ -10,6 +10,14 @@ REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
 
 ALLOWED_HOSTS = ["*"]
 
+OPENWISP_RADIUS_RADIUSGROUP_MODEL = 'openwisp_radius.RadiusGroup'
+OPENWISP_RADIUS_RADIUSACCOUNTING_MODEL = 'openwisp_radius.RadiusAccounting'
+OPENWISP_RADIUS_RADIUSCHECK_MODEL = 'openwisp_radius.RadiusCheck'
+OPENWISP_RADIUS_RADIUSREPLY_MODEL = 'openwisp_radius.RadiusReply'
+OPENWISP_RADIUS_RADIUSGROUPCHECK_MODEL = 'openwisp_radius.RadiusGroupCheck'
+OPENWISP_RADIUS_RADIUSGROUPREPLY_MODEL = 'openwisp_radius.RadiusGroupReply'
+OPENWISP_RADIUS_RADIUSUSERGROUP_MODEL = 'openwisp_radius.RadiusUserGroup'
+
 DATABASES = {
     "default": {
         "ENGINE": "openwisp_utils.db.backends.spatialite",
@@ -45,6 +53,13 @@ INSTALLED_APPS = [
     "openwisp_controller.subnet_division",
     "openwisp_notifications",
     "openwisp_ipam",
+    "openwisp_firmware_upgrader",
+    "openwisp_radius",
+    "openwisp_monitoring.monitoring",
+    "openwisp_monitoring.device",
+    "openwisp_monitoring.check",
+    "openwisp_network_topology",
+
     # openwisp2 admin theme
     # (must be loaded here)
     "openwisp_utils.admin_theme",
@@ -67,8 +82,30 @@ INSTALLED_APPS = [
     "channels",
     "import_export",
     # 'debug_toolbar',
+    "private_storage",
 ]
 EXTENDED_APPS = ("django_x509", "django_loci")
+PRIVATE_STORAGE_ROOT = os.path.join(BASE_DIR, 'private')
+
+OPENWISP_ADMIN_THEME_LINKS = [
+ {
+ "type": "text/css",
+ "href": "/static/admin/css/openwisp.css",
+ "rel": "stylesheet",
+ "media": "all",
+ },
+ {
+ "type": "text/css",
+ "href": "/static/custom.css",
+ "rel": "stylesheet",
+ "media": "all",
+ },
+ {
+ "type": "image/x-icon",
+ "href": "/static/favicon.png",
+ "rel": "icon",
+ },
+]
 
 AUTH_USER_MODEL = "openwisp_users.User"
 SITE_ID = 1
@@ -114,6 +151,8 @@ USE_L10N = False
 STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = f"{os.path.dirname(BASE_DIR)}/media/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static_custom')]
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -132,6 +171,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "openwisp_utils.admin_theme.context_processor.menu_groups",
+                'openwisp_utils.admin_theme.context_processor.admin_theme_settings',
                 "openwisp_notifications.context_processors.notification_api_settings",
             ],
         },
@@ -158,6 +198,7 @@ CACHES = {
         },
     }
 }
+
 
 if not TESTING:
     CELERY_BROKER_URL = f"{REDIS_URL}/1"
@@ -197,6 +238,25 @@ if not TESTING and SHELL:
 DJANGO_LOCI_GEOCODE_STRICT_TEST = False
 OPENWISP_CONTROLLER_CONTEXT = {"vpnserver1": "vpn.testdomain.com"}
 OPENWISP_USERS_AUTH_API = True
+
+CELERY_TASK_ROUTES = {
+    # network operations, executed in the "network" queue
+    'openwisp_controller.connection.tasks.*': {'queue': 'network'},
+    # monitoring checks are executed in a dedicated "monitoring" queue
+    'openwisp_monitoring.check.tasks.perform_check': {'queue': 'monitoring'},
+    'openwisp_monitoring.monitoring.tasks.migrate_timeseries_database': {'queue': 'monitoring'},
+    # all other tasks are routed to the default queue (named "celery")
+}
+
+TIMESERIES_DATABASE = {
+    'BACKEND': 'openwisp_monitoring.db.backends.influxdb',
+    'USER': 'openwisp',
+    'PASSWORD': 'openwisp',
+    'NAME': 'openwisp2',
+    'HOST': 'localhost',
+    'PORT': '8086',
+}
+OPENWISP_MONITORING_DEFAULT_RETENTION_POLICY = '26280h0m0s'
 
 TEST_RUNNER = "openwisp_utils.tests.TimeLoggingTestRunner"
 

@@ -63,6 +63,7 @@ urlpatterns += [
     path("admin/", admin.site.urls),
     path("", include("openwisp_controller.urls")),
     path("accounts/", include("openwisp_users.accounts.urls")),
+    path("", include("openwisp_monitoring.urls")),
     path("api/v1/", include("openwisp_utils.api.urls")),
     path("api/v1/", include(("openwisp_users.api.urls", "users"), namespace="users")),
 ]
