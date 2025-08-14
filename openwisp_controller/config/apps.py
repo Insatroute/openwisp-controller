@@ -45,7 +45,7 @@ class ConfigConfig(AppConfig):
 
     def ready(self, *args, **kwargs):
         self.__setmodels__()
-        self.connect_signals()
+        self.connect_signals()  
         self.register_notification_types()
         self.add_ignore_notification_widget()
         self.enable_cache_invalidation()
@@ -165,6 +165,14 @@ class ConfigConfig(AppConfig):
                 "model": get_model_name("config", "Device"),
                 "name": "changelist",
                 "icon": "ow-device",
+            },
+        )
+        register_menu_group(
+            position=71,
+            config={
+                "label": "WiFi Login",
+                "url": "/wifi-login/",
+                "icon": "ow-monitoring-wifi",
             },
         )
         register_menu_group(
