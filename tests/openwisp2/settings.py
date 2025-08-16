@@ -143,7 +143,7 @@ if not TESTING:
 else:
     CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
 
-TIME_ZONE = "Europe/Rome"
+TIME_ZONE = "Asia/Kolkata"
 LANGUAGE_CODE = "en-gb"
 USE_TZ = True
 USE_I18N = False
